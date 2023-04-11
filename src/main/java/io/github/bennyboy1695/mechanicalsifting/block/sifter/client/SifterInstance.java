@@ -65,7 +65,7 @@ public class SifterInstance extends ShaftInstance implements DynamicInstance {
     }
 
     private float getActualValue(float value) {
-        return (value == 0f ? 0f : (value == 1f ? value - 0.975f : (value == -1 ? value + 0.975f : value)));
+        return (value == 0f ? 0f : (value == 1f ? value - 0.980f : (value == -1 ? value + 0.980f : value)));
     }
 
     private float getRenderedTopOffset(SifterTileEntity sifter) {

@@ -9,7 +9,6 @@ import com.simibubi.create.foundation.fluid.FluidRenderer;
 import com.simibubi.create.foundation.render.CachedBufferer;
 import com.simibubi.create.foundation.render.SuperByteBuffer;
 import io.github.bennyboy1695.mechanicalsifting.block.sifter.SifterTileEntity;
-import io.github.bennyboy1695.mechanicalsifting.register.ModItems;
 import io.github.bennyboy1695.mechanicalsifting.register.ModPartials;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;

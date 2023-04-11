@@ -28,7 +28,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import org.jetbrains.annotations.Nullable;
 
 public class SifterBlock extends KineticBlock implements ITE<SifterTileEntity>, ICogWheel {
@@ -75,6 +74,7 @@ public class SifterBlock extends KineticBlock implements ITE<SifterTileEntity>, 
             if (!level.isClientSide()) {
                 if (!sifter.hasMeshStack()) {
                     sifter.meshInv().insertItem(0, itemStack, false);
+                    player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
                 } else {
                     ItemStack oldMesh = sifter.meshInv().extractItem(0, 1, false);
                     sifter.meshInv().insertItem(0, itemStack, false);
