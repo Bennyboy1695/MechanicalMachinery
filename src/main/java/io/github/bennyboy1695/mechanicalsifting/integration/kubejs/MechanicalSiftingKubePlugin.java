@@ -16,9 +16,6 @@ public class MechanicalSiftingKubePlugin extends KubeJSPlugin {
 
 
 
-
-
-
     private static class MeshBuilder extends ItemBuilder {
         public MeshBuilder(ResourceLocation resourceLocation) {
             super(resourceLocation);

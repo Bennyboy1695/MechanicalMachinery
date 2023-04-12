@@ -36,7 +36,6 @@ public class SifterRecipe extends AbstractCrushingRecipe {
 
     @Override
     public boolean matches(RecipeWrapper wrapper, Level level) {
-        MechanicalSifting.getLogger().info(wrapper.toString());
-        return false;
+        return true;
     }
 }
