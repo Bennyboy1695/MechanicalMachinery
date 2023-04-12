@@ -1,0 +1,8 @@
+{
+  "itemGroup.mechanicalmachinery": "Mechanical Machinery",
+  "config.jade.plugin_mechanicalmachinery.jade_provider": "Sifter Info",
+  "mechanicalmachinery.jade.currently_sifting": "Currently Sifting",
+  "mechanicalmachinery.jade.sifting_empty": "Nothing",
+  "mechanicalmachinery.jade.current_mesh": "Mesh",
+  "mechanicalmachinery.jade.mesh_empty": "No mesh"
+}

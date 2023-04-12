@@ -1,8 +1,0 @@
-{
-  "itemGroup.mechanicalsifting": "Mechanical Sifting",
-  "config.jade.plugin_mechanicalsifting.jade_provider": "Sifter Info",
-  "mechanicalsifting.jade.currently_sifting": "Currently Sifting",
-  "mechanicalsifting.jade.sifting_empty": "Nothing",
-  "mechanicalsifting.jade.current_mesh": "Mesh",
-  "mechanicalsifting.jade.mesh_empty": "No mesh"
-}

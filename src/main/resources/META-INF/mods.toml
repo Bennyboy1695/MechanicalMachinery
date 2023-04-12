@@ -2,20 +2,20 @@ modLoader = "javafml" #mandatory
 loaderVersion = "[43,)"
 license = "MIT"
 [[mods]] #mandatory
-modId = "mechanicalsifting" #mandatory
+modId = "mechanicalmachinery" #mandatory
 version = "${file.jarVersion}" #mandatory
-displayName = "MechanicalSifting" #mandatory
+displayName = "MechanicalMachinery" #mandatory
 authors = "Bennyboy1695" #optional
 description = '''
-A sifting mod making use of creates "power" system
+A mod adding machines that makes use of creates 'power' system
 '''
-[[dependencies.mechanicalsifting]] #optional
+[[dependencies.mechanicalmachinery]] #optional
 modId = "forge" #mandatory
 mandatory = true #mandatory
 versionRange = "[43,)" #mandatory
 ordering = "NONE"
 side = "BOTH"
-[[dependencies.mechanicalsifting]]
+[[dependencies.mechanicalmachinery]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.19.2]"

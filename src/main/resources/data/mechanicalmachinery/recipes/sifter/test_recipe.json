@@ -1,0 +1,243 @@
+{
+  "type": "mechanicalmachinery:sifter",
+  "ingredients": [
+    {
+      "tag": "forge:sand"
+    },
+    {
+      "item": "mechanicalmachinery:mesh"
+    },
+    {
+      "amount": 1000,
+      "fluid": "minecraft:water",
+      "nbt": {}
+    }
+  ],
+  "results": [
+    {
+      "item": "minecraft:kelp",
+      "chance": 0.2
+    },
+    {
+      "item": "minecraft:seagrass",
+      "chance": 0.3
+    },
+    {
+      "item": "minecraft:tube_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:brain_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:bubble_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:fire_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:horn_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:kelp",
+      "chance": 0.2
+    },
+    {
+      "item": "minecraft:seagrass",
+      "chance": 0.3
+    },
+    {
+      "item": "minecraft:tube_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:brain_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:bubble_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:fire_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:horn_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:kelp",
+      "chance": 0.2
+    },
+    {
+      "item": "minecraft:seagrass",
+      "chance": 0.3
+    },
+    {
+      "item": "minecraft:tube_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:brain_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:bubble_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:fire_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:horn_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:kelp",
+      "chance": 0.2
+    },
+    {
+      "item": "minecraft:seagrass",
+      "chance": 0.3
+    },
+    {
+      "item": "minecraft:tube_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:brain_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:bubble_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:fire_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:horn_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:kelp",
+      "chance": 0.2
+    },
+    {
+      "item": "minecraft:seagrass",
+      "chance": 0.3
+    },
+    {
+      "item": "minecraft:tube_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:brain_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:bubble_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:fire_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:horn_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:kelp",
+      "chance": 0.2
+    },
+    {
+      "item": "minecraft:seagrass",
+      "chance": 0.3
+    },
+    {
+      "item": "minecraft:tube_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:brain_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:bubble_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:fire_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:horn_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:kelp",
+      "chance": 0.2
+    },
+    {
+      "item": "minecraft:seagrass",
+      "chance": 0.3
+    },
+    {
+      "item": "minecraft:tube_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:brain_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:bubble_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:fire_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:horn_coral",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:iron_nugget",
+      "chance": 0.2
+    },
+    {
+      "item": "minecraft:gold_ingot",
+      "chance": 0.3
+    },
+    {
+      "item": "minecraft:dirt",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:sand",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:gravel",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:oak_log",
+      "chance": 0.05
+    },
+    {
+      "item": "minecraft:birch_log",
+      "chance": 0.05
+    }
+  ],
+  "processingTime": 500
+}

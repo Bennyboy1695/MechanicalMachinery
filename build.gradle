@@ -29,7 +29,7 @@ group = 'io.github.bennyboy1695'
 version = '1.0.0'
 
 java {
-    archivesBaseName = 'MechanicalSifting'
+    archivesBaseName = 'MechanicalMachinery'
     toolchain.languageVersion = JavaLanguageVersion.of(17)
 }
 
@@ -45,7 +45,7 @@ minecraft {
             jvmArg "-XX:+AllowEnhancedClassRedefinition"
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
-            property 'forge.enabledGameTestNamespaces', 'MechanicalSifting'
+            property 'forge.enabledGameTestNamespaces', 'MechanicalMachinery'
 
             mods {
                 mechanicalsifting {
@@ -60,7 +60,7 @@ minecraft {
             jvmArg "-XX:+AllowEnhancedClassRedefinition"
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
-            property 'forge.enabledGameTestNamespaces', 'MechanicalSifting'
+            property 'forge.enabledGameTestNamespaces', 'MechanicalMachinery'
 
             mods {
                 mechanicalsifting {
@@ -75,7 +75,7 @@ minecraft {
             jvmArg "-XX:+AllowEnhancedClassRedefinition"
             property 'forge.logging.markers', 'REGISTRIES'
             property 'forge.logging.console.level', 'debug'
-            property 'forge.enabledGameTestNamespaces', 'MechanicalSifting'
+            property 'forge.enabledGameTestNamespaces', 'MechanicalMachinery'
 
             mods {
                 mechanicalsifting {
@@ -92,7 +92,7 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
-            args '--mod', 'mechanicalsifting', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+            args '--mod', 'mechanicalmachinery', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
             mods {
                 mechanicalsifting {
                     source sourceSets.main
@@ -183,7 +183,7 @@ dependencies {
 // Example for how to get properties into the manifest for reading at runtime.
 jar {
     manifest {
-        attributes(["Specification-Title"     : "mechanicalsifting",
+        attributes(["Specification-Title"     : "mechanicalmachinery",
                     "Specification-Vendor"    : "Bennyboy1695",
                     "Specification-Version"   : "1", // We are version 1 of ourselves
                     "Implementation-Title"    : project.name,

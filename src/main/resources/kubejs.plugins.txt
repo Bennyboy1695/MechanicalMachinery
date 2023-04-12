@@ -1,1 +1,1 @@
-io.github.bennyboy1695.mechanicalsifting.integration.kubejs.MechanicalSiftingKubePlugin
+io.github.bennyboy1695.mechanicalmachinery.integration.kubejs.MechanicalMachineryKubePlugin

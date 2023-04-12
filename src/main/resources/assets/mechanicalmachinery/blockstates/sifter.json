@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "mechanicalmachinery:block/sifter"
+    },
+    "facing=south": {
+      "model": "mechanicalmachinery:block/sifter",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "mechanicalmachinery:block/sifter",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "mechanicalmachinery:block/sifter",
+      "y": 90
+    }
+  }
+}
