@@ -2,11 +2,10 @@ package io.github.bennyboy1695.mechanicalmachinery.integration.jei;
 
 import com.simibubi.create.compat.jei.*;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
-import com.simibubi.create.foundation.config.AllConfigs;
-import com.simibubi.create.foundation.config.CRecipes;
 import com.simibubi.create.foundation.config.ConfigBase;
-import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
+import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
+import com.simibubi.create.infrastructure.config.AllConfigs;
+import com.simibubi.create.infrastructure.config.CRecipes;
 import io.github.bennyboy1695.mechanicalmachinery.MechanicalMachinery;
 import io.github.bennyboy1695.mechanicalmachinery.data.recipe.SifterRecipe;
 import io.github.bennyboy1695.mechanicalmachinery.register.ModBlocks;
@@ -22,6 +21,7 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.runtime.IIngredientManager;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
@@ -53,7 +53,7 @@ public class MechanicalMachineryJEI implements IModPlugin {
 
     private void loadCategories() {
         this.modCategories.clear();
-        CreateRecipeCategory<?>
+        CreateRecipeCategory<SifterRecipe>
                 sifting = builder(SifterRecipe.class)
                 .addTypedRecipes(ModRecipeTypes.SIFTER)
                 .catalyst(ModBlocks.SIFTER::get)
@@ -232,7 +232,7 @@ public class MechanicalMachineryJEI implements IModPlugin {
 
         public CreateRecipeCategory<T> build(String name, CreateRecipeCategory.Factory<T> factory) {
             Supplier<List<T>> recipesSupplier;
-            if (predicate.test(AllConfigs.SERVER.recipes)) {
+            if (predicate.test(AllConfigs.server().recipes)) {
                 recipesSupplier = () -> {
                     List<T> recipes = new ArrayList<>();
                     for (Consumer<List<T>> consumer : recipeListConsumers)
@@ -245,7 +245,7 @@ public class MechanicalMachineryJEI implements IModPlugin {
 
             CreateRecipeCategory.Info<T> info = new CreateRecipeCategory.Info<>(
                     new mezz.jei.api.recipe.RecipeType<>(MechanicalMachinery.rl(name), recipeClass),
-                    Lang.translateDirect("recipe." + name), background, icon, recipesSupplier, catalysts);
+                    Component.translatable(MechanicalMachinery.MOD_ID + ".recipe." + name), background, icon, recipesSupplier, catalysts);
             CreateRecipeCategory<T> category = factory.create(info);
             modCategories.add(category);
             return category;

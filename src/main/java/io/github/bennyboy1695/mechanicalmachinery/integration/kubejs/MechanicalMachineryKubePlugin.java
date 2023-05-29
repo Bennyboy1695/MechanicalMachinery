@@ -3,6 +3,8 @@ package io.github.bennyboy1695.mechanicalmachinery.integration.kubejs;
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.RegistryObjectBuilderTypes;
 import dev.latvian.mods.kubejs.item.ItemBuilder;
+import dev.latvian.mods.kubejs.recipe.RegisterRecipeTypesEvent;
+import io.github.bennyboy1695.mechanicalmachinery.MechanicalMachinery;
 import io.github.bennyboy1695.mechanicalmachinery.item.MeshItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -13,7 +15,6 @@ public class MechanicalMachineryKubePlugin extends KubeJSPlugin {
     public void init() {
         RegistryObjectBuilderTypes.ITEM.addType("mechanicalmachinery:mesh", MeshBuilder.class, MeshBuilder::new);
     }
-
 
 
     private static class MeshBuilder extends ItemBuilder {

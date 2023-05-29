@@ -1,8 +1,12 @@
 {
   "itemGroup.mechanicalmachinery": "Mechanical Machinery",
+  "block.mechanicalmachinery.sifter": "Sifter",
+  "item.mechanicalmachinery.mesh": "Basic Mesh",
+  "item.mechanicalmachinery.test_mesh": "Test Mesh",
   "config.jade.plugin_mechanicalmachinery.jade_provider": "Sifter Info",
   "mechanicalmachinery.jade.currently_sifting": "Currently Sifting",
   "mechanicalmachinery.jade.sifting_empty": "Nothing",
   "mechanicalmachinery.jade.current_mesh": "Mesh",
-  "mechanicalmachinery.jade.mesh_empty": "No mesh"
+  "mechanicalmachinery.jade.mesh_empty": "No mesh",
+  "mechanicalmachinery.recipe.sifter": "Sifting Recipes"
 }

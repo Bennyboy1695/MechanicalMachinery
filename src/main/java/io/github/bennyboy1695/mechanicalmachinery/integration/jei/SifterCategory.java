@@ -2,7 +2,7 @@ package io.github.bennyboy1695.mechanicalmachinery.integration.jei;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.simibubi.create.compat.jei.category.CreateRecipeCategory;
-import com.simibubi.create.content.contraptions.processing.ProcessingOutput;
+import com.simibubi.create.content.processing.recipe.ProcessingOutput;
 import io.github.bennyboy1695.mechanicalmachinery.MechanicalMachinery;
 import io.github.bennyboy1695.mechanicalmachinery.data.recipe.SifterRecipe;
 import io.github.bennyboy1695.mechanicalmachinery.register.ModGUITextures;
@@ -32,7 +32,7 @@ public class SifterCategory extends CreateRecipeCategory<SifterRecipe> {
 
         if (!recipe.getFluidIngredients().isEmpty()) {
             builder.addSlot(RecipeIngredientRole.CATALYST, 10, 81).setBackground(getRenderedSlot(), -1, -1).addFluidStack(recipe.getFluidIngredients().get(0).getMatchingFluidStacks().get(0).getFluid(), 1000)
-                    .addTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(1, Component.literal(ChatFormatting.RED + "Recipes requires this fluid to be present to work")));
+                    .addTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(1, Component.literal(ChatFormatting.RED + "Recipe requires this fluid to be present to work")));
         }
 
    /*     if (!recipe.getMeshIngredient().isEmpty())

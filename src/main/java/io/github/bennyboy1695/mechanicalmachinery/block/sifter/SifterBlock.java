@@ -1,8 +1,7 @@
 package io.github.bennyboy1695.mechanicalmachinery.block.sifter;
 
-import com.simibubi.create.content.contraptions.base.KineticBlock;
-import com.simibubi.create.content.contraptions.relays.elementary.ICogWheel;
-import com.simibubi.create.foundation.block.ITE;
+import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
+import com.simibubi.create.foundation.block.IBE;
 import io.github.bennyboy1695.mechanicalmachinery.item.MeshItem;
 import io.github.bennyboy1695.mechanicalmachinery.register.ModTiles;
 import net.minecraft.core.BlockPos;
@@ -15,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -22,22 +22,23 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.fluids.FluidUtil;
 import org.jetbrains.annotations.Nullable;
 
-public class SifterBlock extends KineticBlock implements ITE<SifterTileEntity>, ICogWheel {
+import javax.annotation.Nonnull;
+
+public class SifterBlock extends HorizontalKineticBlock implements IBE<SifterBlockEntity> {
     public SifterBlock(BlockBehaviour.Properties properties) {
         super(properties);
-        registerDefaultState(this.getStateDefinition().any().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH));
+        registerDefaultState(this.getStateDefinition().any().setValue(HORIZONTAL_FACING, Direction.NORTH));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(BlockStateProperties.HORIZONTAL_FACING);
+        builder.add(HORIZONTAL_FACING);
     }
 
     @Nullable
@@ -46,29 +47,31 @@ public class SifterBlock extends KineticBlock implements ITE<SifterTileEntity>, 
         BlockPos offsetPos = context.getClickedPos().relative(context.getHorizontalDirection().getOpposite());
         if (context.getPlayer() != null && context.getPlayer().isCrouching()) {
            return context.getLevel().getBlockState(offsetPos).canBeReplaced(context)
-                    ? this.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, (context.getHorizontalDirection()))
+                    ? this.defaultBlockState().setValue(HORIZONTAL_FACING, (context.getHorizontalDirection()))
                     : null;
         }
         return context.getLevel().getBlockState(offsetPos).canBeReplaced(context)
-                ? this.defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, (context.getHorizontalDirection().getOpposite()))
+                ? this.defaultBlockState().setValue(HORIZONTAL_FACING, (context.getHorizontalDirection().getOpposite()))
                 : null;
     }
 
+    @Nonnull
     @Override
-    public VoxelShape getShape(BlockState p_48816_, BlockGetter p_48817_, BlockPos p_48818_, CollisionContext p_48819_) {
+    public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext context) {
         return Block.box(0.0, 0.0, 0.0, 16.0, 12.5, 16.0);
     }
 
+    @Nonnull
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         ItemStack itemStack = player.getItemInHand(hand);
         BlockEntity tileEntity = level.getBlockEntity(pos);
 
-        if (!(tileEntity instanceof SifterTileEntity)) {
+        if (!(tileEntity instanceof SifterBlockEntity)) {
             return InteractionResult.SUCCESS;
         }
 
-        SifterTileEntity sifter = (SifterTileEntity) tileEntity;
+        SifterBlockEntity sifter = (SifterBlockEntity) tileEntity;
         if (itemStack.getItem() instanceof BucketItem) {
             if (!level.isClientSide()) {
                 FluidUtil.interactWithFluidHandler(player, hand, sifter.inputTank.getPrimaryHandler());
@@ -109,12 +112,22 @@ public class SifterBlock extends KineticBlock implements ITE<SifterTileEntity>, 
     }
 
     @Override
-    public Class<SifterTileEntity> getTileEntityClass() {
-        return SifterTileEntity.class;
+    public Class<SifterBlockEntity> getBlockEntityClass() {
+        return SifterBlockEntity.class;
     }
 
     @Override
-    public BlockEntityType<? extends SifterTileEntity> getTileEntityType() {
+    public BlockEntityType<? extends SifterBlockEntity> getBlockEntityType() {
         return ModTiles.SIFTER.get();
+    }
+
+    @Override
+    public SpeedLevel getMinimumRequiredSpeedLevel() {
+        return SpeedLevel.SLOW;
+    }
+
+    @Override
+    public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
+        return face == Direction.DOWN;
     }
 }

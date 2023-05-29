@@ -1,7 +1,7 @@
 package io.github.bennyboy1695.mechanicalmachinery.integration.jade;
 
 import io.github.bennyboy1695.mechanicalmachinery.MechanicalMachinery;
-import io.github.bennyboy1695.mechanicalmachinery.block.sifter.SifterTileEntity;
+import io.github.bennyboy1695.mechanicalmachinery.block.sifter.SifterBlockEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -39,7 +39,7 @@ public enum SifterComponentProvider implements IBlockComponentProvider, IServerD
 
     @Override
     public void appendServerData(CompoundTag compoundTag, ServerPlayer serverPlayer, Level level, BlockEntity block, boolean b) {
-        SifterTileEntity sifterTile = (SifterTileEntity) block;
+        SifterBlockEntity sifterTile = (SifterBlockEntity) block;
         compoundTag.putBoolean("hasMesh", sifterTile.hasMeshStack());
         compoundTag.put("mesh", sifterTile.meshInv().getItem(0).serializeNBT());
         compoundTag.putBoolean("isSifting", !sifterTile.inputInv().isEmpty());

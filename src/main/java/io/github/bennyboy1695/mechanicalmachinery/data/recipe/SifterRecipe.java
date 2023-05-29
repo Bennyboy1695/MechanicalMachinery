@@ -1,7 +1,7 @@
 package io.github.bennyboy1695.mechanicalmachinery.data.recipe;
 
-import com.simibubi.create.content.contraptions.components.crusher.AbstractCrushingRecipe;
-import com.simibubi.create.content.contraptions.processing.ProcessingRecipeBuilder;
+import com.simibubi.create.content.kinetics.crusher.AbstractCrushingRecipe;
+import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import io.github.bennyboy1695.mechanicalmachinery.register.ModRecipeTypes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;

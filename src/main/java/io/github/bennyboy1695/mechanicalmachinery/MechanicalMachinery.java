@@ -25,10 +25,12 @@ public class MechanicalMachinery {
 
     private static final Logger LOGGER = LogUtils.getLogger();
     public static final String MOD_ID = "mechanicalmachinery";
-    private static final NonNullSupplier<CreateRegistrate> registrate = CreateRegistrate.lazy(MOD_ID);
+    private static final CreateRegistrate registrate = CreateRegistrate.create(MOD_ID);
     public MechanicalMachinery() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
+
+        registrate.registerEventListeners(forgeEventBus);
 
         MechancialMachineryTab.register();
 
@@ -51,7 +53,7 @@ public class MechanicalMachinery {
     }
 
     public static CreateRegistrate getRegister() {
-        return registrate.get();
+        return registrate;
     }
 
     public static Logger getLogger() {

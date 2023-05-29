@@ -1,6 +1,6 @@
 package io.github.bennyboy1695.mechanicalmachinery.data.recipe.gen;
 
-import com.simibubi.create.foundation.utility.recipe.IRecipeTypeInfo;
+import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import io.github.bennyboy1695.mechanicalmachinery.register.ModItems;
 import io.github.bennyboy1695.mechanicalmachinery.register.ModRecipeTypes;
 import net.minecraft.data.DataGenerator;

@@ -6,30 +6,28 @@ import com.jozufozu.flywheel.core.Materials;
 import com.jozufozu.flywheel.core.materials.oriented.OrientedData;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
-import com.simibubi.create.content.contraptions.components.press.MechanicalPressBlock;
+import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.foundation.utility.AngleHelper;
-import io.github.bennyboy1695.mechanicalmachinery.block.sifter.SifterTileEntity;
+import io.github.bennyboy1695.mechanicalmachinery.block.sifter.SifterBlockEntity;
 import io.github.bennyboy1695.mechanicalmachinery.register.ModPartials;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class SifterInstance extends TinyShaftInstance implements DynamicInstance {
 
     private final OrientedData sifterTop;
-    private final SifterTileEntity sifter;
+    private final SifterBlockEntity sifter;
+    private TinyShaftInstance tinyShaftInstance;
 
-    public SifterInstance(MaterialManager dispatcher, SifterTileEntity tile) {
+    public SifterInstance(MaterialManager dispatcher, SifterBlockEntity tile) {
         super(dispatcher, tile);
-        new TinyShaftInstance(dispatcher, tile);
         sifter = tile;
-
+        tinyShaftInstance = new TinyShaftInstance(dispatcher, tile);
         sifterTop = dispatcher.defaultSolid()
                 .material(Materials.ORIENTED)
                 .getModel(ModPartials.SIFTER_TOP, blockState)
                 .createInstance();
 
         Quaternion q = Vector3f.YP
-                .rotationDegrees(AngleHelper.horizontalAngle(blockState.getValue(MechanicalPressBlock.HORIZONTAL_FACING)));
+                .rotationDegrees(AngleHelper.horizontalAngle(blockState.getValue(HorizontalKineticBlock.HORIZONTAL_FACING)));
 
         sifterTop.setRotation(q);
 
@@ -56,7 +54,7 @@ public class SifterInstance extends TinyShaftInstance implements DynamicInstance
         return (value == 0f ? 0f : (value == 1f ? value - 0.980f : (value == -1 ? value + 0.980f : value)));
     }
 
-    private float getRenderedTopOffset(SifterTileEntity sifter) {
+    private float getRenderedTopOffset(SifterBlockEntity sifter) {
         return 0;
     }
 

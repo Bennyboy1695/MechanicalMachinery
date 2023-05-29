@@ -1,12 +1,13 @@
 package io.github.bennyboy1695.mechanicalmachinery.block.sifter;
 
 import com.mojang.math.Vector3f;
-import com.simibubi.create.content.contraptions.base.KineticTileEntity;
-import com.simibubi.create.content.contraptions.goggles.IHaveGoggleInformation;
+import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
+import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
+import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
+import com.simibubi.create.foundation.blockEntity.SyncedBlockEntity;
+import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.item.SmartInventory;
-import com.simibubi.create.foundation.tileEntity.SyncedTileEntity;
-import com.simibubi.create.foundation.tileEntity.TileEntityBehaviour;
-import com.simibubi.create.foundation.tileEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import io.github.bennyboy1695.mechanicalmachinery.data.recipe.SifterRecipe;
 import io.github.bennyboy1695.mechanicalmachinery.register.ModItems;
 import io.github.bennyboy1695.mechanicalmachinery.register.ModRecipeTypes;
@@ -32,17 +33,15 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 
-import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
-
-public class SifterTileEntity extends KineticTileEntity implements IHaveGoggleInformation {
+public class SifterBlockEntity extends KineticBlockEntity implements IHaveGoggleInformation {
     public SmartFluidTankBehaviour inputTank;
-    private SmartInventory meshInv;
-    private SmartInventory inputInv;
-    private SmartInventory outputInv;
+    private final SmartInventory meshInv;
+    private final SmartInventory inputInv;
+    private final SmartInventory outputInv;
     private boolean contentsChanged;
     protected LazyOptional<IFluidHandler> fluidCapability;
-    private LazyOptional<IItemHandlerModifiable> itemCapability;
-    private CombinedInvWrapper meshAndInput;
+    private final LazyOptional<IItemHandlerModifiable> itemCapability;
+    private final CombinedInvWrapper meshAndInput;
     private SifterRecipe lastRecipe;
 
     private boolean shouldTopMove;
@@ -50,7 +49,7 @@ public class SifterTileEntity extends KineticTileEntity implements IHaveGoggleIn
     private int step = 0;
     private int tick = 0;
 
-    public SifterTileEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+    public SifterBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
         meshInv = new CustomSmartInv(1, this, 1, false, ModItems.MESH.get());
         meshInv.whenContentsChanged($ -> contentsChanged = true);
@@ -66,6 +65,8 @@ public class SifterTileEntity extends KineticTileEntity implements IHaveGoggleIn
         meshAndInput = new CombinedInvWrapper(meshInv, inputInv);
         contentsChanged = true;
     }
+
+
 
     @Override
     public void tick() {
@@ -103,7 +104,7 @@ public class SifterTileEntity extends KineticTileEntity implements IHaveGoggleIn
                     step = 1;
                 }
                 case 1 -> {
-                    renderStep = getBlockState().getValue(HORIZONTAL_FACING).getOpposite().step();
+                    renderStep = getBlockState().getValue(HorizontalKineticBlock.HORIZONTAL_FACING).getOpposite().step();
                     step = 2;
                 }
                 case 2 -> {
@@ -111,7 +112,7 @@ public class SifterTileEntity extends KineticTileEntity implements IHaveGoggleIn
                     step = 3;
                 }
                 case 3 -> {
-                    renderStep = getBlockState().getValue(HORIZONTAL_FACING).step();
+                    renderStep = getBlockState().getValue(HorizontalKineticBlock.HORIZONTAL_FACING).step();
                     step = 0;
                 }
             }
@@ -125,7 +126,7 @@ public class SifterTileEntity extends KineticTileEntity implements IHaveGoggleIn
     }
 
     @Override
-    public void addBehaviours(List<TileEntityBehaviour> behaviours) {
+    public void addBehaviours(List<BlockEntityBehaviour> behaviours) {
         super.addBehaviours(behaviours);
         behaviours.add(inputTank = SmartFluidTankBehaviour.single(this, 1000)
                 .allowExtraction()
@@ -202,18 +203,19 @@ public class SifterTileEntity extends KineticTileEntity implements IHaveGoggleIn
 
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
+        super.addToGoggleTooltip(tooltip, isPlayerSneaking);
         return containedFluidTooltip(tooltip, isPlayerSneaking, getCapability(ForgeCapabilities.FLUID_HANDLER));
     }
 
     private static class CustomSmartInv extends SmartInventory {
 
         private final Object allowedInstance;
-        public CustomSmartInv(int slots, SyncedTileEntity te, Object allowedInstance) {
+        public CustomSmartInv(int slots, SyncedBlockEntity te, Object allowedInstance) {
             super(slots, te);
             this.allowedInstance = allowedInstance;
         }
 
-        public CustomSmartInv(int slots, SyncedTileEntity te, int stackSize, boolean stackNonStackables, Object allowedInstance) {
+        public CustomSmartInv(int slots, SyncedBlockEntity te, int stackSize, boolean stackNonStackables, Object allowedInstance) {
             super(slots, te, stackSize, stackNonStackables);
             this.allowedInstance = allowedInstance;
         }
