@@ -2,12 +2,11 @@ package io.github.bennyboy1695.mechanicalmachinery;
 
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.foundation.data.CreateRegistrate;
-import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import io.github.bennyboy1695.mechanicalmachinery.data.recipe.gen.MechanicalMachineryRecipe;
 import io.github.bennyboy1695.mechanicalmachinery.register.ModBlocks;
 import io.github.bennyboy1695.mechanicalmachinery.register.ModItems;
 import io.github.bennyboy1695.mechanicalmachinery.register.ModRecipeTypes;
-import io.github.bennyboy1695.mechanicalmachinery.register.ModTiles;
+import io.github.bennyboy1695.mechanicalmachinery.register.ModBlockEntities;
 import io.github.bennyboy1695.mechanicalmachinery.util.MechancialMachineryTab;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -37,7 +36,7 @@ public class MechanicalMachinery {
         //Init of mod stuffs
         ModBlocks.register();
         ModItems.register();
-        ModTiles.register();
+        ModBlockEntities.register();
 
         ModRecipeTypes.register(modEventBus);
 

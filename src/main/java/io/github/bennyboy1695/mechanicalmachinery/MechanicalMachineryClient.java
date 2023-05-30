@@ -2,7 +2,7 @@ package io.github.bennyboy1695.mechanicalmachinery;
 
 import io.github.bennyboy1695.mechanicalmachinery.block.sifter.client.SifterRenderer;
 import io.github.bennyboy1695.mechanicalmachinery.register.ModPartials;
-import io.github.bennyboy1695.mechanicalmachinery.register.ModTiles;
+import io.github.bennyboy1695.mechanicalmachinery.register.ModBlockEntities;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -21,6 +21,6 @@ public class MechanicalMachineryClient {
 
     private static void setupEvent(FMLClientSetupEvent event) {
        /*TODO: Find out why the builder in ModTiles wont accept the renderer*/
-        BlockEntityRenderers.register(ModTiles.SIFTER.get(), SifterRenderer::new);
+        BlockEntityRenderers.register(ModBlockEntities.SIFTER.get(), SifterRenderer::new);
     }
 }

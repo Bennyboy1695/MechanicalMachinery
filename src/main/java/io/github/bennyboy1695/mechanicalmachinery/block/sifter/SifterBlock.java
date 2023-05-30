@@ -2,8 +2,9 @@ package io.github.bennyboy1695.mechanicalmachinery.block.sifter;
 
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
+import com.simibubi.create.foundation.item.ItemHelper;
 import io.github.bennyboy1695.mechanicalmachinery.item.MeshItem;
-import io.github.bennyboy1695.mechanicalmachinery.register.ModTiles;
+import io.github.bennyboy1695.mechanicalmachinery.register.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -67,11 +68,10 @@ public class SifterBlock extends HorizontalKineticBlock implements IBE<SifterBlo
         ItemStack itemStack = player.getItemInHand(hand);
         BlockEntity tileEntity = level.getBlockEntity(pos);
 
-        if (!(tileEntity instanceof SifterBlockEntity)) {
+        if (!(tileEntity instanceof SifterBlockEntity sifter)) {
             return InteractionResult.SUCCESS;
         }
 
-        SifterBlockEntity sifter = (SifterBlockEntity) tileEntity;
         if (itemStack.getItem() instanceof BucketItem) {
             if (!level.isClientSide()) {
                 FluidUtil.interactWithFluidHandler(player, hand, sifter.inputTank.getPrimaryHandler());
@@ -118,7 +118,7 @@ public class SifterBlock extends HorizontalKineticBlock implements IBE<SifterBlo
 
     @Override
     public BlockEntityType<? extends SifterBlockEntity> getBlockEntityType() {
-        return ModTiles.SIFTER.get();
+        return ModBlockEntities.SIFTER.get();
     }
 
     @Override
@@ -129,5 +129,17 @@ public class SifterBlock extends HorizontalKineticBlock implements IBE<SifterBlo
     @Override
     public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
         return face == Direction.DOWN;
+    }
+
+    @Override
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (state.hasBlockEntity() && state.getBlock() != newState.getBlock()) {
+            withBlockEntityDo(worldIn, pos, sifter -> {
+                ItemHelper.dropContents(worldIn, pos, sifter.meshInv());
+                ItemHelper.dropContents(worldIn, pos, sifter.inputInv());
+                ItemHelper.dropContents(worldIn, pos, sifter.outputInv());
+            });
+            worldIn.removeBlockEntity(pos);
+        }
     }
 }

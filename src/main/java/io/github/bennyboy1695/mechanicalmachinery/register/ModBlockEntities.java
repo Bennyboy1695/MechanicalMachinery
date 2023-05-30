@@ -4,9 +4,8 @@ import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import io.github.bennyboy1695.mechanicalmachinery.MechanicalMachinery;
 import io.github.bennyboy1695.mechanicalmachinery.block.sifter.SifterBlockEntity;
 import io.github.bennyboy1695.mechanicalmachinery.block.sifter.client.SifterInstance;
-import io.github.bennyboy1695.mechanicalmachinery.block.sifter.client.SifterRenderer;
 
-public class ModTiles {
+public class ModBlockEntities {
 
     public static final BlockEntityEntry<SifterBlockEntity> SIFTER = MechanicalMachinery.getRegister()
             .blockEntity("sifter", SifterBlockEntity::new)

@@ -11,7 +11,7 @@ import net.minecraft.world.level.material.Fluids;
 public class SifterRecipeGen extends MechanicalMachineryRecipe {
 
     GeneratedRecipe TEST_RECIPE = create("test_recipe", builder -> builder.duration(300)
-            .require(ModItems.TEST_MESH.get())
+            .require(ModItems.MESH.get())
             .require(Blocks.GRAVEL)
             .require(Fluids.WATER.getSource(), 1000)
             .output(.8f, Items.IRON_NUGGET)
