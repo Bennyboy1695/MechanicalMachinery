@@ -30,7 +30,7 @@ public class MechanicalMachinery {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         IEventBus forgeEventBus = MinecraftForge.EVENT_BUS;
 
-        registrate.registerEventListeners(forgeEventBus);
+        registrate.registerEventListeners(modEventBus);
 
         MechancialMachineryTab.register();
 

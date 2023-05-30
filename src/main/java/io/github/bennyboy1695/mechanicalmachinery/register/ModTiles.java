@@ -12,7 +12,7 @@ public class ModTiles {
             .blockEntity("sifter", SifterBlockEntity::new)
             .instance(() -> SifterInstance::new)
             .validBlocks(ModBlocks.SIFTER)
-            .renderer(() -> SifterRenderer::new)
+/*            .renderer(() -> SifterRenderer::new)*/
             .register();
 
     public static void register() {

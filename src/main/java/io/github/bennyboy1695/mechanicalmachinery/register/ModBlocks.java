@@ -22,7 +22,7 @@ public class ModBlocks {
             .initialProperties(SharedProperties::stone)
             .properties(p -> p.color(MaterialColor.METAL))
             .properties(BlockBehaviour.Properties::noOcclusion)
-            .transform(BlockStressDefaults.setImpact(4.0))
+            .transform(BlockStressDefaults.setImpact(16.0))
             .transform(pickaxeOnly())
             .blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
             .item()

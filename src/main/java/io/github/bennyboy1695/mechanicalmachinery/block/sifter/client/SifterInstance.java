@@ -61,7 +61,6 @@ public class SifterInstance extends TinyShaftInstance implements DynamicInstance
     @Override
     public void updateLight() {
         super.updateLight();
-
         relight(pos, sifterTop);
     }
 

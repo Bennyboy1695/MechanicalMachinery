@@ -3,30 +3,30 @@ package io.github.bennyboy1695.mechanicalmachinery.register;
 import com.google.common.collect.ImmutableSet;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeBuilder;
 import com.simibubi.create.content.processing.recipe.ProcessingRecipeSerializer;
+import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.recipe.IRecipeTypeInfo;
 import com.simibubi.create.foundation.utility.Lang;
-import com.simibubi.create.foundation.utility.RegisteredObjects;
 import io.github.bennyboy1695.mechanicalmachinery.MechanicalMachinery;
 import io.github.bennyboy1695.mechanicalmachinery.data.recipe.SifterRecipe;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public enum ModRecipeTypes implements IRecipeTypeInfo {
@@ -102,27 +102,14 @@ public enum ModRecipeTypes implements IRecipeTypeInfo {
         return world.getRecipeManager()
                 .getRecipeFor(getType(), inv, world);
     }
-    public Optional<SifterRecipe> find(Container inv, Level world, boolean hasFluid) {
-        if(world.isClientSide())
-            return Optional.empty();
+    public Optional<SifterRecipe> find(RecipeWrapper inv, Level world, FluidStack fluidStack) {
         List<SifterRecipe> siftingRecipes = world.getRecipeManager().getAllRecipesFor(ModRecipeTypes.SIFTER.getType());
-        Stream<SifterRecipe> siftingRecipesFiltered = siftingRecipes.stream().filter(siftingRecipe -> siftingRecipe.matches((RecipeWrapper) inv, world));
+        Stream<SifterRecipe> siftingRecipesFiltered = siftingRecipes.stream().filter(siftingRecipe -> siftingRecipe.matches(inv, world) && (siftingRecipe.requiredFluid().equals(FluidIngredient.EMPTY) ? FluidStack.EMPTY.equals(fluidStack) : siftingRecipe.requiredFluid().test(fluidStack)));
         return siftingRecipesFiltered.findAny();
-
-
     }
 
     public static final Set<ResourceLocation> RECIPE_DENY_SET =
             ImmutableSet.of(new ResourceLocation("occultism", "spirit_trade"), new ResourceLocation("occultism", "ritual"));
-
-    public static boolean shouldIgnoreInAutomation(Recipe<?> recipe) {
-        RecipeSerializer<?> serializer = recipe.getSerializer();
-        if (serializer != null && RECIPE_DENY_SET.contains(RegisteredObjects.getKeyOrThrow(serializer)))
-            return true;
-        return recipe.getId()
-                .getPath()
-                .endsWith("_manual_only");
-    }
 
     private static class Registers {
         private static final DeferredRegister<RecipeSerializer<?>> SERIALIZER_REGISTER = DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, MechanicalMachinery.MOD_ID);

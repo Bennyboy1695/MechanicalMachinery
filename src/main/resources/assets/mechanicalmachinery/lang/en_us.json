@@ -8,5 +8,7 @@
   "mechanicalmachinery.jade.sifting_empty": "Nothing",
   "mechanicalmachinery.jade.current_mesh": "Mesh",
   "mechanicalmachinery.jade.mesh_empty": "No mesh",
-  "mechanicalmachinery.recipe.sifter": "Sifting Recipes"
+  "mechanicalmachinery.recipe.sifter": "Sifting Recipes",
+  "create.mechanicalmachinery.sifter.current_fluid": "Current Fluid: ",
+  "create.mechanicalmachinery.sifter.progress": "Progress: "
 }

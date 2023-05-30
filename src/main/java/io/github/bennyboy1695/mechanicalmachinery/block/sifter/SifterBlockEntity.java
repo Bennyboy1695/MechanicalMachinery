@@ -1,44 +1,65 @@
 package io.github.bennyboy1695.mechanicalmachinery.block.sifter;
 
 import com.mojang.math.Vector3f;
+import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
+import com.simibubi.create.content.kinetics.press.MechanicalPressBlockEntity;
+import com.simibubi.create.content.processing.basin.BasinBlockEntity;
+import com.simibubi.create.content.processing.basin.BasinRecipe;
 import com.simibubi.create.foundation.blockEntity.SyncedBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
+import com.simibubi.create.foundation.blockEntity.behaviour.simple.DeferralBehaviour;
 import com.simibubi.create.foundation.item.SmartInventory;
+import com.simibubi.create.foundation.recipe.RecipeFinder;
+import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.infrastructure.config.AllConfigs;
+import io.github.bennyboy1695.mechanicalmachinery.MechanicalMachinery;
 import io.github.bennyboy1695.mechanicalmachinery.data.recipe.SifterRecipe;
 import io.github.bennyboy1695.mechanicalmachinery.register.ModItems;
 import io.github.bennyboy1695.mechanicalmachinery.register.ModRecipeTypes;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.crafting.IShapedRecipe;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class SifterBlockEntity extends KineticBlockEntity implements IHaveGoggleInformation {
     public SmartFluidTankBehaviour inputTank;
     private final SmartInventory meshInv;
     private final SmartInventory inputInv;
     private final SmartInventory outputInv;
-    private boolean contentsChanged;
     protected LazyOptional<IFluidHandler> fluidCapability;
     private final LazyOptional<IItemHandlerModifiable> itemCapability;
     private final CombinedInvWrapper meshAndInput;
@@ -48,44 +69,81 @@ public class SifterBlockEntity extends KineticBlockEntity implements IHaveGoggle
     private Vector3f renderStep = new Vector3f(0, 0, 0);
     private int step = 0;
     private int tick = 0;
+    private int timer;
+    private boolean fluidChanged;
 
     public SifterBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
-        meshInv = new CustomSmartInv(1, this, 1, false, ModItems.MESH.get());
-        meshInv.whenContentsChanged($ -> contentsChanged = true);
-        meshInv.forbidExtraction();
-        inputInv = new SmartInventory(1, this, 512, false);
-        inputInv.whenContentsChanged($ -> contentsChanged = true);
-        inputInv.forbidExtraction();
-        outputInv = new SmartInventory(64, this, 512, false);
-        outputInv.whenContentsChanged($ -> contentsChanged = true);
-        outputInv.forbidInsertion();
+        meshInv = new SmartInventory(1, this, 1, false);
+        meshInv.whenContentsChanged($ -> sendData()).forbidInsertion().forbidExtraction();
+        inputInv = new SmartInventory(1, this, 64, false).forbidExtraction().whenContentsChanged($ -> sendData());
+        outputInv = new SmartInventory(64, this, 512, false).forbidInsertion().whenContentsChanged($ -> sendData());
         itemCapability = LazyOptional.of(() -> new CombinedInvWrapper(meshInv, inputInv, outputInv));
         fluidCapability = inputTank.getCapability().cast();
         meshAndInput = new CombinedInvWrapper(meshInv, inputInv);
-        contentsChanged = true;
     }
-
 
 
     @Override
     public void tick() {
         super.tick();
+        tick++;
         if (getSpeed() == 0) {
             return;
         }
+        if (meshInv().isEmpty()) {
+            return;
+        }
+        if (fluidChanged) {
+            fluidChanged = false;
+            shouldTopMove = false;
+            lastRecipe = null;
+            return;
+        }
+        for (int i = 0; i < outputInv().getSlots(); i++) {
+            if (outputInv().getStackInSlot(i).getCount() == outputInv().getSlotLimit(i)) {
+                return;
+            }
+        }
 
-        tick++;
-        doRenderTicks();
-        processRecipe();
-        shouldTopMove = true;
+        if (timer > 0) {
+            timer -= getProcessingSpeed();
+
+            if (level.isClientSide) {
+                    doRenderTicks();
+                    shouldTopMove = true;
+                return;
+            }
+            if (timer <= 0)
+                processRecipe();
+            return;
+        }
+        if (inputInv.getStackInSlot(0)
+                .isEmpty())
+            return;
+
+        RecipeWrapper inventoryIn = new RecipeWrapper(meshAndInput);
+        if (lastRecipe == null || !lastRecipe.matches(inventoryIn, level)) {
+            Optional<SifterRecipe> recipe = ModRecipeTypes.SIFTER.find(inventoryIn, level, inputTank.getPrimaryHandler().getFluid());
+            if (!recipe.isPresent()) {
+                timer = 100;
+                shouldTopMove = false;
+                sendData();
+            } else {
+                lastRecipe = recipe.get();
+                timer = lastRecipe.getProcessingDuration();
+                sendData();
+            }
+            return;
+        }
+        timer = lastRecipe.getProcessingDuration();
         sendData();
     }
 
     private void processRecipe() {
         RecipeWrapper recipeWrapper = new RecipeWrapper(meshAndInput);
         if (lastRecipe == null || !lastRecipe.matches(recipeWrapper, level)) {
-            Optional<SifterRecipe> sifterRecipe = ModRecipeTypes.SIFTER.find(recipeWrapper, level, !inputTank.isEmpty());
+            Optional<SifterRecipe> sifterRecipe = ModRecipeTypes.SIFTER.find(recipeWrapper, level, inputTank.getPrimaryHandler().getFluid());
             if (sifterRecipe.isEmpty()) {
                 return;
             }
@@ -93,7 +151,21 @@ public class SifterBlockEntity extends KineticBlockEntity implements IHaveGoggle
         }
         ItemStack stack = inputInv.getStackInSlot(0);
         stack.shrink(1);
-        lastRecipe.rollResults().forEach(out -> ItemHandlerHelper.insertItem(outputInv, out, false));
+        ItemStack mesh = meshInv.getStackInSlot(0);
+        mesh.hurt(1, level.random, null);
+        if (mesh.getDamageValue() >= mesh.getMaxDamage()) {
+            meshInv.removeItem(0, 1);
+        } else {
+            meshInv.setItem(0, mesh);
+        }
+        lastRecipe.rollResults().forEach(out -> {
+            outputInv.allowInsertion();
+            ItemHandlerHelper.insertItem(outputInv(), out, false);
+            outputInv.forbidInsertion();
+        });
+        shouldTopMove = false;
+        sendData();
+        setChanged();
     }
 
     private void doRenderTicks() {
@@ -119,6 +191,10 @@ public class SifterBlockEntity extends KineticBlockEntity implements IHaveGoggle
         }
     }
 
+    public int getProcessingSpeed() {
+        return Mth.clamp((int) Math.abs(getSpeed() / 16f), 1, 512);
+    }
+
     @Override
     protected AABB createRenderBoundingBox() {
         return new AABB(worldPosition).expandTowards(0, 0, 0)
@@ -130,7 +206,8 @@ public class SifterBlockEntity extends KineticBlockEntity implements IHaveGoggle
         super.addBehaviours(behaviours);
         behaviours.add(inputTank = SmartFluidTankBehaviour.single(this, 1000)
                 .allowExtraction()
-                .allowInsertion());
+                .allowInsertion()
+                .whenFluidUpdates(() -> fluidChanged = true));
     }
 
     @Nonnull
@@ -165,6 +242,7 @@ public class SifterBlockEntity extends KineticBlockEntity implements IHaveGoggle
     public void notifyUpdate() {
         super.notifyUpdate();
     }
+
     @Override
     public void invalidate() {
         super.invalidate();
@@ -204,28 +282,18 @@ public class SifterBlockEntity extends KineticBlockEntity implements IHaveGoggle
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
         super.addToGoggleTooltip(tooltip, isPlayerSneaking);
-        return containedFluidTooltip(tooltip, isPlayerSneaking, getCapability(ForgeCapabilities.FLUID_HANDLER));
+        Lang.translate(MechanicalMachinery.MOD_ID + ".sifter.current_fluid")
+                .style(ChatFormatting.AQUA)
+                .forGoggles(tooltip);
+        if (inputTank.getPrimaryHandler().getFluid().equals(FluidStack.EMPTY)) {
+            Lang.text("Empty").style(ChatFormatting.WHITE).forGoggles(tooltip, 1);
+        } else {
+            Lang.fluidName(inputTank.getPrimaryHandler().getFluid()).style(ChatFormatting.WHITE).forGoggles(tooltip, 1);
+        }
+        return true;
     }
 
-    private static class CustomSmartInv extends SmartInventory {
-
-        private final Object allowedInstance;
-        public CustomSmartInv(int slots, SyncedBlockEntity te, Object allowedInstance) {
-            super(slots, te);
-            this.allowedInstance = allowedInstance;
-        }
-
-        public CustomSmartInv(int slots, SyncedBlockEntity te, int stackSize, boolean stackNonStackables, Object allowedInstance) {
-            super(slots, te, stackSize, stackNonStackables);
-            this.allowedInstance = allowedInstance;
-        }
-
-        @Override
-        public @NotNull ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-            if (stack.getItem().getClass().isInstance(allowedInstance)) {
-                super.insertItem(slot, stack, simulate);
-            }
-            return stack;
-        }
+    private static float invertFloat(float number) {
+        return number *= +1;
     }
 }

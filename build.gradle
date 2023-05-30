@@ -26,14 +26,12 @@ apply plugin: 'idea'
 
 
 group = 'io.github.bennyboy1695'
-version = '1.0.0'
+version = "${minecraft_version}-1.0.0"
 
 java {
     archivesBaseName = 'MechanicalMachinery'
     toolchain.languageVersion = JavaLanguageVersion.of(17)
 }
-
-jarJar.enable()
 
 minecraft {
     mappings channel: mappings_channel, version: "${parchment_version}-${minecraft_version}"
@@ -175,6 +173,7 @@ dependencies {
 
     implementation fg.deobf("curse.maven:jade-324717:${jade_id}")
     runtimeOnly fg.deobf("curse.maven:probejs-585406:${probe_id}")
+    runtimeOnly fg.deobf("curse.maven:applied-energistics-2-223794:4548558")
 
     if (System.getProperty('idea.sync.active') != 'true') {
         annotationProcessor "org.spongepowered:mixin:${mixin_version}:processor"
