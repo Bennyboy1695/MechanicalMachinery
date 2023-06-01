@@ -292,8 +292,4 @@ public class SifterBlockEntity extends KineticBlockEntity implements IHaveGoggle
         }
         return true;
     }
-
-    private static float invertFloat(float number) {
-        return number *= +1;
-    }
 }

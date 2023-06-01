@@ -6,6 +6,8 @@ import com.simibubi.create.foundation.data.SharedProperties;
 import com.tterrag.registrate.util.entry.BlockEntry;
 import io.github.bennyboy1695.mechanicalmachinery.MechanicalMachinery;
 import io.github.bennyboy1695.mechanicalmachinery.block.sifter.SifterBlock;
+import io.github.bennyboy1695.mechanicalmachinery.block.storage.controller.StorageControllerBlock;
+import io.github.bennyboy1695.mechanicalmachinery.block.storage.link.StorageLinkBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MaterialColor;
 
@@ -23,6 +25,25 @@ public class ModBlocks {
             .properties(p -> p.color(MaterialColor.METAL))
             .properties(BlockBehaviour.Properties::noOcclusion)
             .transform(BlockStressDefaults.setImpact(16.0))
+            .transform(pickaxeOnly())
+            .blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
+            .item()
+            .transform(customItemModel())
+            .register();
+
+    public static final BlockEntry<StorageControllerBlock> STORAGE_CONTROLLER = MechanicalMachinery.getRegister().block("storage_controller", StorageControllerBlock::new)
+            .initialProperties(SharedProperties::copperMetal)
+            .properties(p -> p.color(MaterialColor.COLOR_ORANGE))
+            .transform(BlockStressDefaults.setImpact(32.0))
+            .blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
+            .item()
+            .transform(customItemModel())
+            .register();
+
+    public static final BlockEntry<StorageLinkBlock> STORAGE_LINK = MechanicalMachinery.getRegister().block("storage_link", StorageLinkBlock::new)
+            .initialProperties(SharedProperties::copperMetal)
+            .properties(p -> p.color(MaterialColor.COLOR_ORANGE))
+            .transform(BlockStressDefaults.setImpact(8.0))
             .transform(pickaxeOnly())
             .blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
             .item()
