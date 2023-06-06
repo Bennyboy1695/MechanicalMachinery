@@ -7,6 +7,7 @@ import io.github.bennyboy1695.mechanicalmachinery.MechanicalMachinery;
 import io.github.bennyboy1695.mechanicalmachinery.data.recipe.SifterRecipe;
 import io.github.bennyboy1695.mechanicalmachinery.register.ModGUITextures;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
@@ -31,8 +32,11 @@ public class SifterCategory extends CreateRecipeCategory<SifterRecipe> {
         builder.addSlot(RecipeIngredientRole.INPUT, 10, 62).setBackground(getRenderedSlot(), -1, -1).addIngredients(recipe.getIngredients().get(1));
 
         if (!recipe.getFluidIngredients().isEmpty()) {
-            builder.addSlot(RecipeIngredientRole.CATALYST, 10, 81).setBackground(getRenderedSlot(), -1, -1).addFluidStack(recipe.getFluidIngredients().get(0).getMatchingFluidStacks().get(0).getFluid(), 1000)
+            IRecipeSlotBuilder fluidSlot = builder.addSlot(RecipeIngredientRole.CATALYST, 10, 81).setBackground(getRenderedSlot(), -1, -1).addFluidStack(recipe.getFluidIngredients().get(0).getMatchingFluidStacks().get(0).getFluid(), 1000)
                     .addTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(1, Component.literal(ChatFormatting.RED + "Recipe requires this fluid to be present to work")));
+            if (recipe.consumesFluid() != 0) {
+                fluidSlot.addTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(2, Component.literal(ChatFormatting.RED + "Consumes " + ChatFormatting.AQUA + recipe.consumesFluid() + "mb")));
+            }
         }
 
    /*     if (!recipe.getMeshIngredient().isEmpty())
@@ -72,7 +76,6 @@ public class SifterCategory extends CreateRecipeCategory<SifterRecipe> {
         }
         return result;
     }
-
 
 
     public void draw(SifterRecipe recipe, IRecipeSlotsView iRecipeSlotsView, PoseStack matrixStack, double mouseX, double mouseY) {

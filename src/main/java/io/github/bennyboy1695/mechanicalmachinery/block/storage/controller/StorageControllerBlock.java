@@ -5,6 +5,7 @@ import com.simibubi.create.foundation.block.IBE;
 import io.github.bennyboy1695.mechanicalmachinery.register.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -38,5 +39,12 @@ public class StorageControllerBlock extends HorizontalKineticBlock implements IB
     @Override
     public SpeedLevel getMinimumRequiredSpeedLevel() {
         return SpeedLevel.MEDIUM;
+    }
+
+    public boolean addLinkToController(Level level, BlockPos controller, BlockPos linkCoords) {
+        withBlockEntityDo(level, controller, controllerTile -> {
+
+        });
+        return false;
     }
 }

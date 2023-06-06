@@ -12,6 +12,7 @@ import com.simibubi.create.foundation.blockEntity.SyncedBlockEntity;
 import com.simibubi.create.foundation.blockEntity.behaviour.BlockEntityBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.fluid.SmartFluidTankBehaviour;
 import com.simibubi.create.foundation.blockEntity.behaviour.simple.DeferralBehaviour;
+import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.recipe.RecipeFinder;
 import com.simibubi.create.foundation.utility.Lang;
@@ -106,12 +107,18 @@ public class SifterBlockEntity extends KineticBlockEntity implements IHaveGoggle
             }
         }
 
+        if (lastRecipe != null && lastRecipe.consumesFluid() != 0 && inputTank.getPrimaryHandler().getFluidAmount() < lastRecipe.consumesFluid()) {
+            shouldTopMove = false;
+            lastRecipe = null;
+            return;
+        }
+
         if (timer > 0) {
             timer -= getProcessingSpeed();
 
             if (level.isClientSide) {
-                    doRenderTicks();
-                    shouldTopMove = true;
+                doRenderTicks();
+                shouldTopMove = true;
                 return;
             }
             if (timer <= 0)
@@ -149,6 +156,11 @@ public class SifterBlockEntity extends KineticBlockEntity implements IHaveGoggle
             }
             lastRecipe = sifterRecipe.get();
         }
+        if (lastRecipe.consumesFluid() != 0 && !lastRecipe.requiredFluid().equals(FluidIngredient.EMPTY) && inputTank.getPrimaryHandler().getFluidAmount() > lastRecipe.consumesFluid()) {
+            inputTank.getPrimaryHandler().drain(lastRecipe.consumesFluid(), IFluidHandler.FluidAction.EXECUTE);
+        } else {
+            return;
+        }
         ItemStack stack = inputInv.getStackInSlot(0);
         stack.shrink(1);
         ItemStack mesh = meshInv.getStackInSlot(0);
@@ -158,6 +170,9 @@ public class SifterBlockEntity extends KineticBlockEntity implements IHaveGoggle
         } else {
             meshInv.setItem(0, mesh);
         }
+        if (lastRecipe.consumesFluid() != 0 && !lastRecipe.requiredFluid().equals(FluidIngredient.EMPTY)) {
+            inputTank.getPrimaryHandler().drain(lastRecipe.consumesFluid(), IFluidHandler.FluidAction.EXECUTE);
+        }
         lastRecipe.rollResults().forEach(out -> {
             outputInv.allowInsertion();
             ItemHandlerHelper.insertItem(outputInv(), out, false);
@@ -166,6 +181,11 @@ public class SifterBlockEntity extends KineticBlockEntity implements IHaveGoggle
         shouldTopMove = false;
         sendData();
         setChanged();
+    }
+
+    @Override
+    public float calculateStressApplied() {
+        return (lastRecipe != null ? super.calculateStressApplied() + lastRecipe.addedStress() : super.calculateStressApplied());
     }
 
     private void doRenderTicks() {

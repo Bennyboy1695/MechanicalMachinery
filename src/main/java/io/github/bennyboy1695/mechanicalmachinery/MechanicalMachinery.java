@@ -3,6 +3,7 @@ package io.github.bennyboy1695.mechanicalmachinery;
 import com.mojang.logging.LogUtils;
 import com.simibubi.create.foundation.data.CreateRegistrate;
 import io.github.bennyboy1695.mechanicalmachinery.data.recipe.gen.MechanicalMachineryRecipe;
+import io.github.bennyboy1695.mechanicalmachinery.integration.create.SifterArmInteraction;
 import io.github.bennyboy1695.mechanicalmachinery.register.ModBlocks;
 import io.github.bennyboy1695.mechanicalmachinery.register.ModItems;
 import io.github.bennyboy1695.mechanicalmachinery.register.ModRecipeTypes;
@@ -38,7 +39,11 @@ public class MechanicalMachinery {
         ModItems.register();
         ModBlockEntities.register();
 
+        //Load Recipe Types
         ModRecipeTypes.register(modEventBus);
+
+        //Load Arm Interactions
+        SifterArmInteraction.register();
 
         modEventBus.addListener(EventPriority.LOWEST, this::gatherData);
 
