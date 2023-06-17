@@ -1,14 +1,25 @@
 {
-  "itemGroup.mechanicalmachinery": "Mechanical Machinery",
-  "block.mechanicalmachinery.sifter": "Sifter",
+  "_comment": "Items",
   "item.mechanicalmachinery.mesh": "Basic Mesh",
   "item.mechanicalmachinery.test_mesh": "Test Mesh",
+  "item.mechanicalmachinery.linking_tool": "Linking Tool (Not Yet Implemented)",
+
+  "_comment": "Blocks",
+  "block.mechanicalmachinery.sifter": "Sifter",
+  "block.mechanicalmachinery.storage_controller": "Storage Controller (Not Yet Implemented)",
+  "block.mechanicalmachinery.storage_link": "Storage Link (Not Yet Implemented)",
+  "block.mechanicalmachinery.dust": "Dust",
+
+  "_comment": "Jade",
   "config.jade.plugin_mechanicalmachinery.jade_provider": "Sifter Info",
   "mechanicalmachinery.jade.currently_sifting": "Currently Sifting",
   "mechanicalmachinery.jade.sifting_empty": "Nothing",
   "mechanicalmachinery.jade.current_mesh": "Mesh",
   "mechanicalmachinery.jade.mesh_empty": "No mesh",
+
+  "_comment": "Misc",
+  "itemGroup.mechanicalmachinery": "Mechanical Machinery",
   "mechanicalmachinery.recipe.sifter": "Sifting Recipes",
   "create.mechanicalmachinery.sifter.current_fluid": "Current Fluid: ",
-  "create.mechanicalmachinery.sifter.progress": "Progress: "
+  "mechanicalmachinery.menu.storage_controller.display": "Storage Controller"
 }

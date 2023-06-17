@@ -45,7 +45,7 @@ public class SifterCategory extends CreateRecipeCategory<SifterRecipe> {
         List<ProcessingOutput> results = recipe.getRollableResults();
         boolean single = results.size() == 1;
         int i = 0;
-        for (Iterator<ProcessingOutput> var7 = results.iterator(); var7.hasNext(); ++i) {
+        for (Iterator<ProcessingOutput> var7 = results.iterator(); var7.hasNext() && i < 48; ++i) {
             ProcessingOutput output = var7.next();
             int xOffset = i % 7 * 19;
             int yOffset = i / 7 * 19;

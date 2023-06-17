@@ -3,6 +3,8 @@ package io.github.bennyboy1695.mechanicalmachinery.block.sifter;
 import com.mojang.math.Vector3f;
 import com.simibubi.create.AllRecipeTypes;
 import com.simibubi.create.content.equipment.goggles.IHaveGoggleInformation;
+import com.simibubi.create.content.kinetics.BlockStressDefaults;
+import com.simibubi.create.content.kinetics.BlockStressValues;
 import com.simibubi.create.content.kinetics.base.HorizontalKineticBlock;
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
 import com.simibubi.create.content.kinetics.press.MechanicalPressBlockEntity;
@@ -16,6 +18,7 @@ import com.simibubi.create.foundation.fluid.FluidIngredient;
 import com.simibubi.create.foundation.item.SmartInventory;
 import com.simibubi.create.foundation.recipe.RecipeFinder;
 import com.simibubi.create.foundation.utility.Lang;
+import com.simibubi.create.foundation.utility.VecHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import io.github.bennyboy1695.mechanicalmachinery.MechanicalMachinery;
 import io.github.bennyboy1695.mechanicalmachinery.data.recipe.SifterRecipe;
@@ -24,10 +27,16 @@ import io.github.bennyboy1695.mechanicalmachinery.register.ModRecipeTypes;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
@@ -37,6 +46,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.crafting.IShapedRecipe;
@@ -116,8 +126,9 @@ public class SifterBlockEntity extends KineticBlockEntity implements IHaveGoggle
         if (timer > 0) {
             timer -= getProcessingSpeed();
 
-            if (level.isClientSide) {
+            if (level.isClientSide && lastRecipe != null) {
                 doRenderTicks();
+                spawnParticles();
                 shouldTopMove = true;
                 return;
             }
@@ -156,22 +167,22 @@ public class SifterBlockEntity extends KineticBlockEntity implements IHaveGoggle
             }
             lastRecipe = sifterRecipe.get();
         }
-        if (lastRecipe.consumesFluid() != 0 && !lastRecipe.requiredFluid().equals(FluidIngredient.EMPTY) && inputTank.getPrimaryHandler().getFluidAmount() > lastRecipe.consumesFluid()) {
-            inputTank.getPrimaryHandler().drain(lastRecipe.consumesFluid(), IFluidHandler.FluidAction.EXECUTE);
-        } else {
-            return;
+        if (lastRecipe.consumesFluid() != 0) {
+            if (lastRecipe.requiredFluid().test(inputTank.getPrimaryHandler().getFluid()) && inputTank.getPrimaryHandler().getFluidAmount() >= lastRecipe.consumesFluid()) {
+                inputTank.getPrimaryHandler().drain(lastRecipe.consumesFluid(), IFluidHandler.FluidAction.EXECUTE);
+            } else {
+                return;
+            }
         }
         ItemStack stack = inputInv.getStackInSlot(0);
         stack.shrink(1);
         ItemStack mesh = meshInv.getStackInSlot(0);
         mesh.hurt(1, level.random, null);
+        //TODO: Maybe add mending if xp drops from output
         if (mesh.getDamageValue() >= mesh.getMaxDamage()) {
             meshInv.removeItem(0, 1);
         } else {
             meshInv.setItem(0, mesh);
-        }
-        if (lastRecipe.consumesFluid() != 0 && !lastRecipe.requiredFluid().equals(FluidIngredient.EMPTY)) {
-            inputTank.getPrimaryHandler().drain(lastRecipe.consumesFluid(), IFluidHandler.FluidAction.EXECUTE);
         }
         lastRecipe.rollResults().forEach(out -> {
             outputInv.allowInsertion();
@@ -183,9 +194,30 @@ public class SifterBlockEntity extends KineticBlockEntity implements IHaveGoggle
         setChanged();
     }
 
+    protected void spawnParticles() {
+        ItemStack stack = inputInv.getStackInSlot(0);
+        if (stack == null || stack.isEmpty())
+            return;
+
+        ParticleOptions particleData = null;
+        if (stack.getItem() instanceof BlockItem)
+            particleData = new BlockParticleOption(ParticleTypes.BLOCK, ((BlockItem) stack.getItem()).getBlock()
+                    .defaultBlockState());
+        else
+            particleData = new ItemParticleOption(ParticleTypes.ITEM, stack);
+
+        RandomSource r = level.random;
+        for (int i = 0; i < 2; i++)
+            level.addParticle(particleData, worldPosition.getX() + r.nextFloat(), worldPosition.getY() + r.nextFloat(),
+                    worldPosition.getZ() + r.nextFloat(), 0, 0, 0);
+    }
+
     @Override
     public float calculateStressApplied() {
-        return (lastRecipe != null ? super.calculateStressApplied() + lastRecipe.addedStress() : super.calculateStressApplied());
+        if (lastRecipe != null && shouldTopMove) {
+            lastStressApplied = (float) BlockStressValues.getImpact(getStressConfigKey()) + lastRecipe.addedStress();
+        }
+        return lastStressApplied;
     }
 
     private void doRenderTicks() {

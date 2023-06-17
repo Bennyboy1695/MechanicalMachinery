@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/sand",
+  "textures": {
+    "all": "mechanicalmachinery:blocks/dust"
+  }
+}

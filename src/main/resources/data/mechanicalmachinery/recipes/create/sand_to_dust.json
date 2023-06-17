@@ -1,0 +1,18 @@
+{
+  "type": "create:milling",
+  "ingredients": [
+    {
+      "tag": "forge:sand"
+    }
+  ],
+  "processingTime": 250,
+  "results": [
+    {
+      "item": "mechanicalmachinery:dust"
+    },
+    {
+      "item": "minecraft:clay_ball",
+      "chance": 0.2
+    }
+  ]
+}
