@@ -1,12 +1,10 @@
 package io.github.bennyboy1695.mechanicalmachinery;
 
 import io.github.bennyboy1695.mechanicalmachinery.block.sifter.client.SifterRenderer;
-import io.github.bennyboy1695.mechanicalmachinery.register.ModBlocks;
+import io.github.bennyboy1695.mechanicalmachinery.register.ModGuis;
 import io.github.bennyboy1695.mechanicalmachinery.register.ModPartials;
 import io.github.bennyboy1695.mechanicalmachinery.register.ModBlockEntities;
-import io.github.bennyboy1695.mechanicalmachinery.util.BlockColourImpl;
-import io.github.bennyboy1695.mechanicalmachinery.util.ColourUtils;
-import io.github.bennyboy1695.mechanicalmachinery.util.ItemColourImpl;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;

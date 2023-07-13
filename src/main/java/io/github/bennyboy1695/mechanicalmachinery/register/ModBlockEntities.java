@@ -18,10 +18,12 @@ public class ModBlockEntities {
 
     public static final BlockEntityEntry<StorageControllerBlockEntity> STORAGE_CONTROLLER = MechanicalMachinery.getRegister()
             .blockEntity("storage_controller", StorageControllerBlockEntity::new)
+            .validBlocks(ModBlocks.STORAGE_CONTROLLER)
             .register();
 
     public static final BlockEntityEntry<StorageLinkBlockEntity> STORAGE_LINK = MechanicalMachinery.getRegister()
             .blockEntity("storage_link", StorageLinkBlockEntity::new)
+            .validBlocks(ModBlocks.STORAGE_LINK)
             .register();
 
     public static void register() {

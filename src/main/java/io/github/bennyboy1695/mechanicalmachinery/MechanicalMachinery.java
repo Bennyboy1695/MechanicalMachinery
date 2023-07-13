@@ -37,6 +37,7 @@ public class MechanicalMachinery {
         ModBlocks.register();
         ModItems.register();
         ModBlockEntities.register();
+        ModGuis.register();
 
         //Load Recipe Types
         ModRecipeTypes.register(modEventBus);

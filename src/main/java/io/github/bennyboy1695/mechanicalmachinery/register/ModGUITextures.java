@@ -12,7 +12,15 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 public enum ModGUITextures implements ScreenElement {
+
+    //Controller
+    CONTROLLER("controller_base", 210, 200),
+
+
+    //Misc
     JEI_SMALL_ARROW("jei/widgets", 0, 0, 20, 9);
+
+
 
     public static final int FONT_COLOR = 5726074;
     public final ResourceLocation location;

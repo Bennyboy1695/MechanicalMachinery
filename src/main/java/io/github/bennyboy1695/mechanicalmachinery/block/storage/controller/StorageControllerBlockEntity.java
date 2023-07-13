@@ -1,11 +1,10 @@
 package io.github.bennyboy1695.mechanicalmachinery.block.storage.controller;
 
 import com.simibubi.create.content.kinetics.base.KineticBlockEntity;
-import io.github.bennyboy1695.mechanicalmachinery.block.storage.link.StorageLinkBlockEntity;
+import io.github.bennyboy1695.mechanicalmachinery.block.storage.gui.ControllerMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.LongTag;
 import net.minecraft.network.chat.Component;
@@ -13,8 +12,6 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ChestMenu;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -29,6 +26,11 @@ public class StorageControllerBlockEntity extends KineticBlockEntity implements 
     public StorageControllerBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
         linkedLinks = new HashSet<>();
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
     }
 
     public boolean addLink(BlockPos pos) {
@@ -65,23 +67,11 @@ public class StorageControllerBlockEntity extends KineticBlockEntity implements 
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
+    public AbstractContainerMenu createMenu(int id, Inventory inventory, Player player) {
         if (isSpeedRequirementFulfilled() && !isOverStressed()) {
-            ChestMenu menu = ChestMenu.fourRows(pContainerId, pPlayerInventory);
-            linkedLinks.forEach(pos -> {
-                if (level.getBlockEntity(pos) != null && level.getBlockEntity(pos) instanceof StorageLinkBlockEntity linkBlock) {
-                    linkBlock.getLinkCapability().getStoredStacks().forEach((direction, stacks)-> {
-                        for (int i = 0; i < stacks.size(); i++) {
-                            if (i < menu.slots.size() && !stacks.get(i).getItem().equals(Items.AIR)) {
-                                menu.getContainer().setItem(i, stacks.get(i));
-                            }
-                        }
-                    });
-                }
-            });
-            return menu;
+            return ControllerMenu.create(id, inventory, this);
         } else {
-            pPlayer.displayClientMessage(Component.literal(ChatFormatting.RED +  "This controller is overstressed or not getting enough speed"), true);
+            player.displayClientMessage(Component.literal(ChatFormatting.RED +  "This controller is overstressed or not getting enough speed"), true);
             return null;
         }
     }

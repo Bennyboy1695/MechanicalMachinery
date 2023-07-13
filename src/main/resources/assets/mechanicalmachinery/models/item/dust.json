@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/sand",
   "textures": {
-    "all": "mechanicalmachinery:blocks/dust"
+    "all": "mechanicalmachinery:block/dust"
   }
 }

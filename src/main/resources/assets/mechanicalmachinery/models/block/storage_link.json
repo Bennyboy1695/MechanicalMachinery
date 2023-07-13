@@ -2,9 +2,9 @@
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/block",
 	"textures": {
-		"0": "mechanicalmachinery:blocks/chest_front",
+		"0": "mechanicalmachinery:block/chest_front",
 		"1": "create:block/brass_casing",
-		"particle": "mechanicalmachinery:blocks/chest_front"
+		"particle": "mechanicalmachinery:block/chest_front"
 	},
 	"elements": [
 		{

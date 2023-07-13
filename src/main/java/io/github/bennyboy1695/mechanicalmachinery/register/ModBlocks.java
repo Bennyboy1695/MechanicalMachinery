@@ -11,10 +11,12 @@ import io.github.bennyboy1695.mechanicalmachinery.block.storage.link.StorageLink
 import io.github.bennyboy1695.mechanicalmachinery.util.BlockColourImpl;
 import io.github.bennyboy1695.mechanicalmachinery.util.ColourUtils;
 import io.github.bennyboy1695.mechanicalmachinery.util.ItemColourImpl;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SandBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.MaterialColor;
+import net.minecraftforge.client.model.generators.ModelFile;
 
 import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
 import static com.simibubi.create.foundation.data.TagGen.pickaxeOnly;
@@ -31,33 +33,32 @@ public class ModBlocks {
             .properties(BlockBehaviour.Properties::noOcclusion)
             .transform(BlockStressDefaults.setImpact(16.0))
             .transform(pickaxeOnly())
-            .blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
+            .blockstate((c, p) -> p.modLoc("sifter"))
             .item()
             .transform(customItemModel())
             .register();
 
     public static final BlockEntry<SandBlock> DUST = MechanicalMachinery.getRegister().block("dust", properties -> new SandBlock(ColourUtils.intColor(254,254,213), properties))
-            .blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
             .properties(p -> p.sound(SoundType.SAND))
+            .defaultBlockstate()
             .item()
+            .model((context, provider) -> provider.modLoc("dust"))
             .transform(customItemModel())
             .register();
 
     public static final BlockEntry<StorageControllerBlock> STORAGE_CONTROLLER = MechanicalMachinery.getRegister().block("storage_controller", StorageControllerBlock::new)
-            .initialProperties(SharedProperties::copperMetal)
+            .blockstate((context, provider) -> provider.simpleBlock(Blocks.NETHERITE_BLOCK, AssetLookup.standardModel(context, provider)))
             .properties(p -> p.color(MaterialColor.COLOR_ORANGE))
             .transform(BlockStressDefaults.setImpact(32.0))
-            .blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
             .item()
             .transform(customItemModel())
             .register();
 
     public static final BlockEntry<StorageLinkBlock> STORAGE_LINK = MechanicalMachinery.getRegister().block("storage_link", StorageLinkBlock::new)
-            .initialProperties(SharedProperties::copperMetal)
             .properties(p -> p.color(MaterialColor.COLOR_ORANGE))
             .transform(BlockStressDefaults.setImpact(8.0))
             .transform(pickaxeOnly())
-            .blockstate((c, p) -> p.simpleBlock(c.getEntry(), AssetLookup.partialBaseModel(c, p)))
+            .blockstate((context, provider) -> provider.simpleBlock(Blocks.NETHERITE_BLOCK, AssetLookup.standardModel(context, provider)))
             .item()
             .transform(customItemModel())
             .register();
